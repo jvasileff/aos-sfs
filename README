@@ -1,0 +1,21 @@
+================================================================================
+                                 Anodyneos SFS
+================================================================================
+
+Anodyneos SFS generates Java classes from source files that are composed of XML
+tags intermixed with Java code.  SFS is used to programatically generate valid
+XML documents without the inconvienence of directly using SAX or DOM APIs.
+
+SFS is designed to be extreemly simple and high performance.  Most programming
+logic is written in Java and contained within "sfs:logic" tags, although a
+limitted number of additional SFS tags exist for convenience, such as "sfs:if",
+and "sfs:expr".
+
+Contents:
+
+    BUILDING                Instructions for building from sources
+    LICENSE                 License for this release
+    README                  This document
+    src.java/               Java source code for this release
+    src.lib/                Third party libraries
+    src.sample/             Sample code

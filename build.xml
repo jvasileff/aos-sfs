@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+
+<!--****************************************************************************
+**
+**  ANODYNE OS - SFS
+**
+*****************************************************************************-->
+
+<project name="anodyneos-sfs" default="compile" basedir=".">
+
+    <property file="build.properties"/>
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~  common
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <import file="build.common.xml"/>
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~  properties
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <property name="dir.src.sample"             location="src.sample"/>
+    <property name="dir.build.classes.sample"   location="${dir.build}/classes.sample"/>
+    <property name="dir.build.java.sample"      location="${dir.build}/java.sample"/>
+    <property name="file.depCache.sample"       location="${dir.build}/ant_depcache.sample"/>
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~  required jars
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!-- ALSO NEED: anodyneos-commons.jar -->
+    <property name="ant.jar" location="${dir.jars}/apache-ant-1.6.1/ant.jar"/>
+    <property name="servlet.jar" location="${dir.jars}/servlet-api-2.2/servlet.jar"/>
+    <property name="xalan.jar" location="${dir.jars}/xalan-2.6.2/xalan.jar"/>
+    <property name="xercesImpl.jar" location="${dir.jars}/xalan-2.6.2/xercesImpl.jar"/>
+    <property name="xml-apis.jar" location="${dir.jars}/xalan-2.6.2/xml-apis.jar"/>
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~  prepare.post
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <target name="prepare.post">
+        <!-- make directories -->
+        <mkdir dir="${dir.build.classes.sample}"/>
+        <mkdir dir="${dir.build.java.sample}"/>
+
+        <!-- ide.lib -->
+        <copy toDir="${dir.build.ide.lib}" file="${anodyneos-commons.jar}"/>
+        <copy toDir="${dir.build.ide.lib}" file="${ant.jar}"/>
+        <copy toDir="${dir.build.ide.lib}" file="${servlet.jar}"/>
+        <copy toDir="${dir.build.ide.lib}" file="${xalan.jar}"/>
+        <copy toDir="${dir.build.ide.lib}" file="${xercesImpl.jar}"/>
+        <copy toDir="${dir.build.ide.lib}" file="${xml-apis.jar}"/>
+
+        <!-- paths -->
+        <path id="path.compile">
+            <fileset id="fs.lib" dir="${dir.build.ide.lib}">
+                <include name="*.jar"/>
+            </fileset>
+        </path>
+    </target>
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~  sfsc
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+    <target name="sfsc" depends="compile" description="Run sfsc on the Samples">
+        <taskdef    name="sfsc"
+                    classname="org.anodyneos.sfs.impl.ant.Sfsc"
+                    classpath="${dir.build.classes}" />
+        <sfsc   srcdir="${dir.src.sample}"
+                destdir="${dir.build.java.sample}"/>
+    </target>
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~  translateSample
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+    <target name="translateSample" depends="compile" description="Translate Sample.sfs">
+        <java taskname="translateSample" fork="yes" classname="org.anodyneos.sfs.impl.translater.Translater">
+            <classpath>
+                <path refid="path.compile"/>
+                <path location="${dir.build.classes}"/>
+            </classpath>
+            <arg value="${dir.src.sample}/Sample.sfs" />
+            <arg value="${dir.build.java.sample}/Sample.java" />
+        </java>
+    </target>
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~  compileSample
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+    <target name="compileSample" depends="translateSample" description="Compile Sample.sfs">
+        <!-- depend -->
+        <depend srcdir="${dir.build.java.sample}"
+                destdir="${dir.build.classes.sample}"
+                cache="${file.depCache.sample}"
+                closure="yes">
+        </depend>
+        <!-- compile -->
+        <javac destdir="${dir.build.classes.sample}" deprecation="no">
+            <classpath refid="path.compile"/>
+            <classpath location="${dir.build.classes}"/>
+            <src path="${dir.build.java.sample}"/>
+        </javac>
+    </target>
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~  runSample
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+    <target name="runSample" depends="compileSample" description="Run Sample.sfs">
+        <java taskname="runSample" fork="yes" classname="Sample">
+            <classpath>
+                <path refid="path.compile"/>
+                <path location="${dir.build.classes}"/>
+                <path location="${dir.build.classes.sample}"/>
+            </classpath>
+        </java>
+    </target>
+
+</project>
+

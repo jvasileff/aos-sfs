@@ -1,0 +1,20 @@
+compile.deprecation:off
+compile.debug:true
+compile.debuglevel:lines,source
+
+################################################################################
+##
+## EXTERNAL JAR FILES; ONE OF THE FOLLOWING SECTIONS IS NECESSARY:
+##
+################################################################################
+
+## ALL JARS FROM REPOSITORY:
+dir.jars=/path/to/jars
+
+## JARS SPECIFIED INDIVIDUALLY:
+# anodyneos-commons.jar=/path/to/jarfile
+# ant.jar=/path/to/jarfile
+# servlet.jar=/path/to/jarfile
+# xalan.jar=/path/to/jarfile
+# xercesImpl.jar=/path/to/jarfile
+# xml-apis.jar=/path/to/jarfile

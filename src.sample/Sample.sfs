@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+
+<!-- all SFS tags must be in the SFS namespace. -->
+<sfs:class
+    xmlns:sfs="http://www.anodyneos.org/namespaces/sfs"
+    class="Sample"
+    extends="java.lang.Object">
+
+    <sfs:import>org.anodyneos.sfs.util.*</sfs:import>
+
+    <!--
+    <sfs:interface>com.company.SomeInteface</sfs:interface>
+    <sfs:interface>com.company.AnotherInteface</sfs:interface>
+    -->
+
+    <sfs:structure>
+        <![CDATA[
+            public static final String MY_STRING="1234";
+            public int getIter() {
+                return 4;
+            }
+
+            public static void main(String[] args) throws Exception {
+                long start;
+                Sample sample = new Sample();
+
+                start = System.currentTimeMillis();
+                XmlStreamer.process(
+                        sample.getHtmlReader("value of arg1", "value of arg2", 3), System.out);
+                System.out.println("<!-- Total time (ms): " + (System.currentTimeMillis() - start) + " -->");
+            }
+        ]]>
+    </sfs:structure>
+
+    <sfs:method name="html" reader="getHtmlReader">
+        <sfs:param name="myStr" type="java.lang.String"/>
+        <sfs:param name="myStr2" type="java.lang.String"/>
+        <sfs:param name="myInt" type="int"/>
+        <html lang="en">
+            <head>
+                <title>MyTitle</title>
+            </head>
+            <body>
+                <sfs:attribute name="bgcolor" value="#ffffff"/>
+                <sfs:attribute name="fgcolor" value='{"#000000"}'/>
+                <sfs:logic>
+                    if (true) {
+                        <sfs:out expr="4*2">This is <i>conditional</i> text!!!</sfs:out>
+                    }
+                </sfs:logic>
+                <sfs:if test="true">
+                    This is also <i>conditional</i> text!!!
+                </sfs:if>
+                <sfs:logic>
+                    for (int i = 0; i &lt; getIter(); i++) {
+                        <div number="{i}">
+                            Iteration = <sfs:expr>i</sfs:expr>
+                            MyStr = "<sfs:expr>myStr</sfs:expr>",
+                            MyStr2 = "<sfs:expr>myStr2</sfs:expr>",
+                            myMethod: <sfs:logic>myMethod(sfsContext, "MyStr", myStr);</sfs:logic>
+                            <!--
+                            <sfs:call method="myMethod">
+                                <sfs:with-param expr="myStr"/>
+                                <sfs:with-param expr="myStr2"/>
+                            </sfs:call>
+                            -->
+                        </div>
+                    }
+                </sfs:logic>
+            </body>
+        </html>
+    </sfs:method>
+
+    <!--
+    -->
+    <sfs:method name="myMethod" reader="getReaderMyMethod">
+        <sfs:param name="name" type="java.lang.String"/>
+        <sfs:param name="value" type="java.lang.String"/>
+        <sfs:expr>name</sfs:expr> = <sfs:expr>value</sfs:expr>
+    </sfs:method>
+
+</sfs:class>
+
