@@ -29,9 +29,12 @@
     <!-- ALSO NEED: anodyneos-commons.jar -->
     <property name="ant.jar" location="${dir.jars}/apache-ant-1.6.1/ant.jar"/>
     <property name="servlet.jar" location="${dir.jars}/servlet-api-2.2/servlet.jar"/>
-    <property name="xalan.jar" location="${dir.jars}/xalan-2.6.2/xalan.jar"/>
-    <property name="xercesImpl.jar" location="${dir.jars}/xalan-2.6.2/xercesImpl.jar"/>
-    <property name="xml-apis.jar" location="${dir.jars}/xalan-2.6.2/xml-apis.jar"/>
+
+    <property name="xml-apis.jar" location="${dir.jars}/xalan-2.7.1/xml-apis.jar"/>
+    <property name="xalan.jar" location="${dir.jars}/xalan-2.7.1/xalan.jar"/>
+    <property name="xercesImpl.jar" location="${dir.jars}/xalan-2.7.1/xercesImpl.jar"/>
+    <property name="serializer.jar" location="${dir.jars}/xalan-2.7.1/serializer.jar"/>
+    <property name="xsltc.jar" location="${dir.jars}/xalan-2.7.1/xsltc.jar"/>
 
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ~~  prepare.post
@@ -45,9 +48,12 @@
         <copy toDir="${dir.build.ide.lib}" file="${anodyneos-commons.jar}"/>
         <copy toDir="${dir.build.ide.lib}" file="${ant.jar}"/>
         <copy toDir="${dir.build.ide.lib}" file="${servlet.jar}"/>
+
+        <copy toDir="${dir.build.ide.lib}" file="${xml-apis.jar}"/>
         <copy toDir="${dir.build.ide.lib}" file="${xalan.jar}"/>
         <copy toDir="${dir.build.ide.lib}" file="${xercesImpl.jar}"/>
-        <copy toDir="${dir.build.ide.lib}" file="${xml-apis.jar}"/>
+        <copy toDir="${dir.build.ide.lib}" file="${serializer.jar}"/>
+        <copy toDir="${dir.build.ide.lib}" file="${xsltc.jar}"/>
 
         <!-- paths -->
         <path id="path.compile">
