@@ -10,6 +10,9 @@
 
     <property file="build.properties"/>
 
+    <property name="compile.source" value="1.4"/>
+    <property name="compile.target" value="1.4"/>
+
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ~~  common
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
@@ -26,9 +29,11 @@
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ~~  required jars
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-    <!-- ALSO NEED: anodyneos-commons.jar -->
+    <property name="anodyneos-commons.jar" location="${dir.jars}/anodyneos-commons-20050414.00/anodyneos-commons.jar"/>
+
     <property name="ant.jar" location="${dir.jars}/apache-ant-1.6.1/ant.jar"/>
-    <property name="servlet.jar" location="${dir.jars}/servlet-api-2.2/servlet.jar"/>
+    <property name="servlet-api.jar" location="${dir.jars}/servlet-api-2.4/servlet-api.jar"/>
+    <property name="commons-logging-1.1.1.jar" location="${dir.jars}/commons-logging-1.1.1/commons-logging-1.1.1.jar"/>
 
     <property name="xml-apis.jar" location="${dir.jars}/xalan-2.7.1/xml-apis.jar"/>
     <property name="xalan.jar" location="${dir.jars}/xalan-2.7.1/xalan.jar"/>
@@ -47,7 +52,8 @@
         <!-- ide.lib -->
         <copy toDir="${dir.build.ide.lib}" file="${anodyneos-commons.jar}"/>
         <copy toDir="${dir.build.ide.lib}" file="${ant.jar}"/>
-        <copy toDir="${dir.build.ide.lib}" file="${servlet.jar}"/>
+        <copy toDir="${dir.build.ide.lib}" file="${servlet-api.jar}"/>
+        <copy toDir="${dir.build.ide.lib}" file="${commons-logging-1.1.1.jar}"/>
 
         <copy toDir="${dir.build.ide.lib}" file="${xml-apis.jar}"/>
         <copy toDir="${dir.build.ide.lib}" file="${xalan.jar}"/>
