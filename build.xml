@@ -29,7 +29,7 @@
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ~~  required jars
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-    <property name="anodyneos-commons.jar" location="${dir.jars}/anodyneos-commons-20051102.00/anodyneos-commons.jar"/>
+    <property name="anodyneos-commons.jar" location="${dir.jars}/anodyneos-commons-0.2.1/anodyneos-commons.jar"/>
 
     <property name="ant.jar" location="${dir.jars}/apache-ant-1.6.1/ant.jar"/>
     <property name="servlet-api.jar" location="${dir.jars}/servlet-api-2.4/servlet-api.jar"/>
