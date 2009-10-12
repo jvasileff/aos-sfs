@@ -6,12 +6,21 @@
 **
 *****************************************************************************-->
 
-<project name="anodyneos-sfs" default="compile" basedir=".">
+<project name="anodyneos-sfs" default="compile" basedir="."
+        xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~  setup and defaults
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
     <property file="build.properties"/>
 
     <property name="compile.source" value="1.4"/>
     <property name="compile.target" value="1.4"/>
+
+    <!-- defaults, override in build.properties if desired -->
+    <property name="compile.deprecation" value="off"/>
+    <property name="compile.debug" value="true"/>
+    <property name="compile.debuglevel" value="lines,source,vars"/>
 
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ~~  common
@@ -27,21 +36,6 @@
     <property name="file.depCache.sample"       location="${dir.build}/ant_depcache.sample"/>
 
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ~~  required jars
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-    <property name="anodyneos-commons.jar" location="${dir.jars}/anodyneos-commons-0.2.1/anodyneos-commons.jar"/>
-
-    <property name="ant.jar" location="${dir.jars}/apache-ant-1.6.1/ant.jar"/>
-    <property name="servlet-api.jar" location="${dir.jars}/servlet-api-2.4/servlet-api.jar"/>
-    <property name="commons-logging-1.1.1.jar" location="${dir.jars}/commons-logging-1.1.1/commons-logging-1.1.1.jar"/>
-
-    <property name="xml-apis.jar" location="${dir.jars}/xalan-2.7.1/xml-apis.jar"/>
-    <property name="xalan.jar" location="${dir.jars}/xalan-2.7.1/xalan.jar"/>
-    <property name="xercesImpl.jar" location="${dir.jars}/xalan-2.7.1/xercesImpl.jar"/>
-    <property name="serializer.jar" location="${dir.jars}/xalan-2.7.1/serializer.jar"/>
-    <property name="xsltc.jar" location="${dir.jars}/xalan-2.7.1/xsltc.jar"/>
-
-    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ~~  prepare.post
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
     <target name="prepare.post">
@@ -49,23 +43,24 @@
         <mkdir dir="${dir.build.classes.sample}"/>
         <mkdir dir="${dir.build.java.sample}"/>
 
-        <!-- ide.lib -->
-        <copy toDir="${dir.build.ide.lib}" file="${anodyneos-commons.jar}"/>
-        <copy toDir="${dir.build.ide.lib}" file="${ant.jar}"/>
-        <copy toDir="${dir.build.ide.lib}" file="${servlet-api.jar}"/>
-        <copy toDir="${dir.build.ide.lib}" file="${commons-logging-1.1.1.jar}"/>
+        <!-- non-maven dependencies -->
+        <copy toDir="${dir.build.ide.lib}" file="src.lib/aos-commons-0.2.1.jar"/>
 
-        <copy toDir="${dir.build.ide.lib}" file="${xml-apis.jar}"/>
-        <copy toDir="${dir.build.ide.lib}" file="${xalan.jar}"/>
-        <copy toDir="${dir.build.ide.lib}" file="${xercesImpl.jar}"/>
-        <copy toDir="${dir.build.ide.lib}" file="${serializer.jar}"/>
-        <copy toDir="${dir.build.ide.lib}" file="${xsltc.jar}"/>
+        <!-- dependencies -->
+        <artifact:pom id="pom.main" file="pom.xml"/>
+        <artifact:dependencies usescope="compile" filesetId="fs.dependencies.compile" pomrefid="pom.main"/>
+        <artifact:dependencies usescope="test" filesetId="fs.dependencies.test" pomrefid="pom.main"/>
+        <artifact:dependencies usescope="runtime" filesetId="fs.dependencies.runtime" pomrefid="pom.main"/>
 
         <!-- paths -->
-        <path id="path.compile">
-            <fileset id="fs.lib" dir="${dir.build.ide.lib}">
-                <include name="*.jar"/>
-            </fileset>
+        <path id="path.dependencies.compile">
+            <fileset dir="${dir.build.ide.lib}" includes="*.jar"/>
+            <fileset refid="fs.dependencies.compile"/>
+        </path>
+
+        <path id="path.dependencies.runtime">
+            <fileset dir="${dir.build.ide.lib}" includes="*.jar"/>
+            <fileset refid="fs.dependencies.runtime"/>
         </path>
     </target>
 
@@ -88,7 +83,7 @@
     <target name="translateSample" depends="compile" description="Translate Sample.sfs">
         <java taskname="translateSample" fork="yes" classname="org.anodyneos.sfs.impl.translater.Translater">
             <classpath>
-                <path refid="path.compile"/>
+                <path refid="path.dependencies.compile"/>
                 <path location="${dir.build.classes}"/>
             </classpath>
             <arg value="${dir.src.sample}/Sample.sfs" />
@@ -109,7 +104,7 @@
         </depend>
         <!-- compile -->
         <javac destdir="${dir.build.classes.sample}" deprecation="no">
-            <classpath refid="path.compile"/>
+            <classpath refid="path.dependencies.compile"/>
             <classpath location="${dir.build.classes}"/>
             <src path="${dir.build.java.sample}"/>
         </javac>
@@ -122,7 +117,7 @@
     <target name="runSample" depends="compileSample" description="Run Sample.sfs">
         <java taskname="runSample" fork="yes" classname="Sample">
             <classpath>
-                <path refid="path.compile"/>
+                <path refid="path.dependencies.compile"/>
                 <path location="${dir.build.classes}"/>
                 <path location="${dir.build.classes.sample}"/>
             </classpath>
