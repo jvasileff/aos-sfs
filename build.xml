@@ -43,9 +43,6 @@
         <mkdir dir="${dir.build.classes.sample}"/>
         <mkdir dir="${dir.build.java.sample}"/>
 
-        <!-- non-maven dependencies -->
-        <copy toDir="${dir.build.ide.lib}" file="src.lib/aos-commons-0.2.1.jar"/>
-
         <!-- dependencies -->
         <artifact:pom id="pom.main" file="pom.xml"/>
         <artifact:dependencies usescope="compile" filesetId="fs.dependencies.compile" pomrefid="pom.main"/>
@@ -54,12 +51,10 @@
 
         <!-- paths -->
         <path id="path.dependencies.compile">
-            <fileset dir="${dir.build.ide.lib}" includes="*.jar"/>
             <fileset refid="fs.dependencies.compile"/>
         </path>
 
         <path id="path.dependencies.runtime">
-            <fileset dir="${dir.build.ide.lib}" includes="*.jar"/>
             <fileset refid="fs.dependencies.runtime"/>
         </path>
     </target>
