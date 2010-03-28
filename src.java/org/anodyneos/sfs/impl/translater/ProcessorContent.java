@@ -59,7 +59,7 @@ class ProcessorContent extends TranslaterProcessor {
     public void startElement(String uri, String localName, String qName,
             Attributes attributes) throws SAXException {
         CodeWriter out = getTranslaterContext().getCodeWriter();
-     
+
         Map prefixBuffer = getTranslaterContext().getBufferedStartPrefixMappings();
         Iterator it = prefixBuffer.keySet().iterator();
         while (it.hasNext()) {
@@ -97,9 +97,9 @@ class ProcessorContent extends TranslaterProcessor {
             out.printIndent().println(
                   "sfsContentHandler.addAttribute("
                 +        Util.escapeStringQuoted(attributes.getURI(i))
-                + ", " + Util.escapeStringQuoted(attributes.getLocalName(i))
+                //+ ", " + Util.escapeStringQuoted(attributes.getLocalName(i))
                 + ", " + Util.escapeStringQuoted(attributes.getQName(i))
-                + ", " + Util.escapeStringQuoted(attributes.getType(i))
+                //+ ", " + Util.escapeStringQuoted(attributes.getType(i))
                 + ", " + codeValue
                 + ");"
             );

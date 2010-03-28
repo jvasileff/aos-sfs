@@ -39,9 +39,9 @@ class ProcessorAttribute extends TranslaterProcessor {
         out.printIndent().println(
               "sfsContentHandler.addAttribute("
             +        "\"\"" // URI
-            + ", " + Util.escapeStringQuoted(name) // localName
+            //+ ", " + Util.escapeStringQuoted(name) // localName
             + ", " + Util.escapeStringQuoted(name) // qName
-            + ", " + "\"CDATA\"" // type
+            //+ ", " + "\"CDATA\"" // type
             + ", " + codeValue
             + ");"
         );
