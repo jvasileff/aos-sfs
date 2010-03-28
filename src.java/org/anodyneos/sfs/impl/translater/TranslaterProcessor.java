@@ -1,7 +1,6 @@
 package org.anodyneos.sfs.impl.translater;
 
 import org.anodyneos.commons.xml.sax.ElementProcessor;
-import org.anodyneos.sfs.impl.util.CodeWriter;
 import org.xml.sax.SAXException;
 
 class TranslaterProcessor extends ElementProcessor {
@@ -18,22 +17,11 @@ class TranslaterProcessor extends ElementProcessor {
     }
 
     public void startPrefixMapping(java.lang.String prefix, java.lang.String uri) throws SAXException {
-        CodeWriter out = getTranslaterContext().getCodeWriter();
-        out.printIndent().println(
-              "_sfsContentHandler.startPrefixMapping("
-            + "\""   + prefix + "\""
-            + ",\""  + uri + "\""
-            + ");"
-        );
+        getTranslaterContext().bufferStartPrefixMapping(prefix, uri);
     }
 
     public void endPrefixMapping(java.lang.String prefix) throws SAXException {
-        CodeWriter out = getTranslaterContext().getCodeWriter();
-        out.printIndent().println(
-              "_sfsContentHandler.endPrefixMapping("
-            + "\""   + prefix + "\""
-            + ");"
-        );
+        getTranslaterContext().bufferEndPrefix(prefix);
     }
 
 }

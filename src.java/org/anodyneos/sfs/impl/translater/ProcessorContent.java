@@ -1,5 +1,9 @@
 package org.anodyneos.sfs.impl.translater;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 import org.anodyneos.commons.xml.sax.ElementProcessor;
 import org.anodyneos.sfs.impl.util.CodeWriter;
 import org.anodyneos.sfs.impl.util.Util;
@@ -55,6 +59,22 @@ class ProcessorContent extends TranslaterProcessor {
     public void startElement(String uri, String localName, String qName,
             Attributes attributes) throws SAXException {
         CodeWriter out = getTranslaterContext().getCodeWriter();
+     
+        Map prefixBuffer = getTranslaterContext().getBufferedStartPrefixMappings();
+        Iterator it = prefixBuffer.keySet().iterator();
+        while (it.hasNext()) {
+            String prefix = (String) it.next();
+            String tmpUri = (String) prefixBuffer.get(prefix);
+
+            out.printIndent().println(
+                    "sfsContentHandler.startPrefixMapping("
+                  + "\""   + prefix + "\""
+                  + ",\""  + uri + "\""
+                  + ");"
+              );
+        }
+        getTranslaterContext().clearBufferedStartPrefixMappings();
+
         // start element
         out.printIndent().println(
               "sfsContentHandler.startElement("
@@ -118,5 +138,18 @@ class ProcessorContent extends TranslaterProcessor {
             + ", " + Util.escapeStringQuoted(qName)
             + ");"
         );
+
+        Set prefixBuffer = getTranslaterContext().getBufferedEndPrefixes();
+        Iterator it = prefixBuffer.iterator();
+        while (it.hasNext()) {
+            String prefix = (String) it.next();
+
+            out.printIndent().println(
+                  "sfsContentHandler.endPrefixMapping("
+                + "\""   + prefix + "\""
+                + ");"
+            );
+            getTranslaterContext().clearBufferedEndPrefixes();
+        }
     }
 }
