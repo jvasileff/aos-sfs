@@ -4,8 +4,7 @@ import org.xml.sax.SAXException;
 
 public class SfsException extends SAXException {
 
-    //public SfsException() {
-    //}
+    private static final long serialVersionUID = 1L;
 
     public SfsException(Exception e) {
         super(e);

@@ -20,7 +20,7 @@ public class Sfsc extends MatchingTask {
 
     public Path createSrc() {
         if (src == null) {
-            src = new Path(project);
+            src = new Path(getProject());
         }
         return src.createPath();
     }
@@ -69,11 +69,11 @@ public class Sfsc extends MatchingTask {
         // compile lists
         String[] list = src.list();
         for (int i = 0; i < list.length; i++) {
-            File srcDir = project.resolveFile(list[i]);
+            File srcDir = getProject().resolveFile(list[i]);
             if (!srcDir.exists()) {
                 throw new BuildException("srcdir \""
                                          + srcDir.getPath()
-                                         + "\" does not exist!", location);
+                                         + "\" does not exist!", getLocation());
             }
 
             DirectoryScanner ds = this.getDirectoryScanner(srcDir);
@@ -116,19 +116,17 @@ public class Sfsc extends MatchingTask {
      */
     protected void checkParameters() {
         if (src == null) {
-            throw new BuildException("srcdir attribute must be set!",
-                                     location);
+            throw new BuildException("srcdir attribute must be set!", getLocation());
         }
         if (src.size() == 0) {
-            throw new BuildException("srcdir attribute must be set!",
-                                     location);
+            throw new BuildException("srcdir attribute must be set!", getLocation());
         }
 
         if (destDir != null && !destDir.isDirectory()) {
             throw new BuildException("destination directory \""
                                      + destDir
                                      + "\" does not exist "
-                                     + "or is not a directory", location);
+                                     + "or is not a directory", getLocation());
         }
     }
 
@@ -161,7 +159,7 @@ public class Sfsc extends MatchingTask {
             try {
                 org.anodyneos.sfs.impl.Main.translate(args);
             } catch (Exception e) {
-                throw new BuildException(e.getMessage(), location);
+                throw new BuildException(e.getMessage(), getLocation());
             }
         }
     }
