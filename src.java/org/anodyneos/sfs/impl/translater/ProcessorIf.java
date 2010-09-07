@@ -6,7 +6,7 @@ import org.anodyneos.sfs.impl.util.Util;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-class ProcessorIf extends TranslaterProcessor {
+class ProcessorIf extends HelperProcessorNS {
 
     private ProcessorContent processorContent;
     private StringBuffer sb;
@@ -25,8 +25,7 @@ class ProcessorIf extends TranslaterProcessor {
         return processorContent.getProcessorFor(uri, localName, qName);
     }
 
-    public void startElement(String uri, String localName, String qName,
-        Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         // handle "expr" attribute if exists
         String test = attributes.getValue(A_TEST);
         String expr = attributes.getValue(A_EXPR);
@@ -38,6 +37,7 @@ class ProcessorIf extends TranslaterProcessor {
         }
     }
 
+    // TODO: use processorContent for this
     public void characters(char[] ch, int start, int length) {
         if (null == sb) {
             sb = new StringBuffer();
@@ -64,4 +64,5 @@ class ProcessorIf extends TranslaterProcessor {
         CodeWriter out = getTranslaterContext().getCodeWriter();
         out.endBlock();
     }
+
 }

@@ -6,7 +6,7 @@ import org.anodyneos.sfs.impl.util.Util;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-class ProcessorOut extends TranslaterProcessor {
+class ProcessorOut extends HelperProcessorNS {
 
     private ProcessorContent processorContent;
     private StringBuffer sb;
@@ -19,13 +19,12 @@ class ProcessorOut extends TranslaterProcessor {
     }
 
     public ElementProcessor getProcessorFor(String uri, String localName, String qName) throws SAXException {
-        // looks like a new element is comming, so flush characters.
+        // looks like a new element is coming, so flush characters.
         flushCharacters();
         return processorContent.getProcessorFor(uri, localName, qName);
     }
 
-    public void startElement(String uri, String localName, String qName,
-        Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         // handle "expr" attribute if exists
         String expr = attributes.getValue(A_EXPR);
         if (null != expr && expr.length() > 0) {
@@ -58,4 +57,5 @@ class ProcessorOut extends TranslaterProcessor {
     public void endElement(String uri, String localName, String qName) {
         flushCharacters();
     }
+
 }

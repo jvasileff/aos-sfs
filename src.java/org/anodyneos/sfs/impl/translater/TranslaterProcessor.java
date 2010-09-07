@@ -16,12 +16,8 @@ class TranslaterProcessor extends ElementProcessor {
         return (TranslaterContext) ctx;
     }
 
-    public void startPrefixMapping(java.lang.String prefix, java.lang.String uri) throws SAXException {
+    public void startPrefixMapping(String prefix, String uri) throws SAXException {
         getTranslaterContext().bufferStartPrefixMapping(prefix, uri);
-    }
-
-    public void endPrefixMapping(java.lang.String prefix) throws SAXException {
-        getTranslaterContext().bufferEndPrefix(prefix);
     }
 
 }

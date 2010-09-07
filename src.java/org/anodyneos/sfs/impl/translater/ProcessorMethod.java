@@ -1,8 +1,12 @@
 package org.anodyneos.sfs.impl.translater;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import org.anodyneos.commons.xml.sax.ElementProcessor;
 import org.anodyneos.sfs.impl.util.CodeWriter;
 import org.anodyneos.sfs.impl.util.JavaMethod;
+import org.anodyneos.sfs.impl.util.Util;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -13,6 +17,7 @@ public class ProcessorMethod extends TranslaterProcessor {
     private boolean headerPrinted = false;
     private JavaMethod jm;
     private String readerMethod;
+    private int phantomPrefixCount;
 
     public static final String E_PARAM = "param";
     public static final String E_METHOD = "method";
@@ -36,6 +41,20 @@ public class ProcessorMethod extends TranslaterProcessor {
             return this;
         } else {
             printMethodHeader();
+
+            CodeWriter out = getTranslaterContext().getCodeWriter();
+            Map prefixMappings = getTranslaterContext().getBufferedStartPrefixMappings();
+            for (Iterator it = prefixMappings.keySet().iterator(); it.hasNext();) {
+                String prefix = (String) it.next();
+                String url = (String) prefixMappings.get(prefix);
+                out.printIndent().println(
+                          "sfsContentHandler.pushPhantomPrefixMapping("
+                        +       Util.escapeStringQuoted(prefix)
+                        + "," + Util.escapeStringQuoted(url)
+                        + ");");
+                phantomPrefixCount++;
+            }
+            getTranslaterContext().clearBufferedStartPrefixMappings();
             return processorContent.getProcessorFor(uri, localName, qName);
         }
     }
@@ -63,8 +82,12 @@ public class ProcessorMethod extends TranslaterProcessor {
         if(URI_SFS.equals(uri) && E_METHOD.equals(localName)) {
             // <sfs:method>
             printMethodHeader(); // in case not already printed
-            // end method block
+
             CodeWriter out = getTranslaterContext().getCodeWriter();
+            for (int i=0; i < phantomPrefixCount; i++) {
+                out.printIndent().println("sfsContentHandler.popPhantomPrefixMapping();");
+            }
+            phantomPrefixCount = 0;
             out.endBlock();
             out.println();
             if (null != readerMethod) {

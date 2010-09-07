@@ -9,7 +9,7 @@ import org.xml.sax.SAXException;
 /**
  *  Attribute element must have name and either expr attribute or text contents.
  */
-class ProcessorAttribute extends TranslaterProcessor {
+class ProcessorAttribute extends HelperProcessorNS {
 
     public static final String A_NAME = "name";
     public static final String A_VALUE = "value";

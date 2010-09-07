@@ -1,27 +1,13 @@
 package org.anodyneos.sfs.impl.translater;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import org.anodyneos.commons.xml.sax.ElementProcessor;
 import org.anodyneos.sfs.impl.util.CodeWriter;
 import org.anodyneos.sfs.impl.util.Util;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-/*
-public class ProcessorContent extends NullProcessor {
-    public ProcessorContent(TranslaterContext ctx) {
-        super(ctx);
-    }
-}
-*/
+class ProcessorContent extends HelperProcessorNS {
 
-class ProcessorContent extends TranslaterProcessor {
-
-    // this is used to break out of logic mode and begin outputing result text
-    // or elements.
     public static final String SFS_OUT = "out";
     public static final String SFS_ATTRIBUTE = "attribute";
     public static final String SFS_EXPR = "expr";
@@ -35,7 +21,7 @@ class ProcessorContent extends TranslaterProcessor {
     }
 
     public ElementProcessor getProcessorFor(String uri, String localName, String qName) throws SAXException {
-        // looks like a new element is comming, so flush characters.
+        // looks like a new element is coming, so flush characters.
         flushCharacters();
         if (URI_SFS.equals(uri)) {
             if (SFS_EXPR.equals(localName)) {
@@ -52,28 +38,13 @@ class ProcessorContent extends TranslaterProcessor {
                 return super.getProcessorFor(uri, localName, qName);
             }
         } else {
+            // handle more result tree content with this
             return this;
         }
     }
 
-    public void startElement(String uri, String localName, String qName,
-            Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         CodeWriter out = getTranslaterContext().getCodeWriter();
-
-        Map prefixBuffer = getTranslaterContext().getBufferedStartPrefixMappings();
-        Iterator it = prefixBuffer.keySet().iterator();
-        while (it.hasNext()) {
-            String prefix = (String) it.next();
-            String tmpUri = (String) prefixBuffer.get(prefix);
-
-            out.printIndent().println(
-                    "sfsContentHandler.startPrefixMapping("
-                  + "\""   + prefix + "\""
-                  + ",\""  + uri + "\""
-                  + ");"
-              );
-        }
-        getTranslaterContext().clearBufferedStartPrefixMappings();
 
         // start element
         out.printIndent().println(
@@ -83,6 +54,7 @@ class ProcessorContent extends TranslaterProcessor {
             + ", " + Util.escapeStringQuoted(qName)
             + ", null);"
         );
+
         // set attributes
         for (int i = 0; i < attributes.getLength(); i++) {
             String value = attributes.getValue(i);
@@ -97,9 +69,7 @@ class ProcessorContent extends TranslaterProcessor {
             out.printIndent().println(
                   "sfsContentHandler.addAttribute("
                 +        Util.escapeStringQuoted(attributes.getURI(i))
-                //+ ", " + Util.escapeStringQuoted(attributes.getLocalName(i))
                 + ", " + Util.escapeStringQuoted(attributes.getQName(i))
-                //+ ", " + Util.escapeStringQuoted(attributes.getType(i))
                 + ", " + codeValue
                 + ");"
             );
@@ -138,18 +108,6 @@ class ProcessorContent extends TranslaterProcessor {
             + ", " + Util.escapeStringQuoted(qName)
             + ");"
         );
-
-        Set prefixBuffer = getTranslaterContext().getBufferedEndPrefixes();
-        Iterator it = prefixBuffer.iterator();
-        while (it.hasNext()) {
-            String prefix = (String) it.next();
-
-            out.printIndent().println(
-                  "sfsContentHandler.endPrefixMapping("
-                + "\""   + prefix + "\""
-                + ");"
-            );
-            getTranslaterContext().clearBufferedEndPrefixes();
-        }
     }
+
 }

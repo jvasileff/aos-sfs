@@ -43,17 +43,12 @@ class ProcessorRoot extends TranslaterProcessor {
                 interfaceProcessors.add(p);
                 return p;
             } else if (E_METHOD.equals(localName)) {
-                printJavaHeader();
-
                 // FIXME clearing all prior startPrefixMappings even though they may be needed for result content.
-                //    1) need to automatically handle endPrefixMapping, see xp
-                //    2) need to be able to suppress mappings like sfs
-
+                //    need to be able to suppress mappings like sfs
                 getTranslaterContext().clearBufferedStartPrefixMappings();
-                getTranslaterContext().clearBufferedEndPrefixes();
 
+                printJavaHeader();
                 return new ProcessorMethod(getTranslaterContext());
-                //return new NullProcessor(ctx);
             } else {
                 return(super.getProcessorFor(uri, localName, qName));
             }
