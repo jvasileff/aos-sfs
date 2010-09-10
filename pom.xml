@@ -3,14 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.anodyneos</groupId>
     <artifactId>aos-sfs</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
             <groupId>org.anodyneos</groupId>
             <artifactId>aos-commons</artifactId>
-            <version>0.2.2</version>
+            <version>0.4.6</version>
         </dependency>
         <dependency>
             <groupId>commons-logging</groupId>
@@ -37,6 +37,11 @@
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
             <version>2.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.1</version>
         </dependency>
     </dependencies>
 

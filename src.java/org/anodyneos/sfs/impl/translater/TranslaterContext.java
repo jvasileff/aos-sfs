@@ -1,5 +1,9 @@
 package org.anodyneos.sfs.impl.translater;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.anodyneos.commons.xml.sax.BaseContext;
 import org.anodyneos.sfs.impl.util.CodeWriter;
 import org.xml.sax.InputSource;
@@ -8,6 +12,7 @@ public class TranslaterContext extends BaseContext implements TranslaterResult {
     private CodeWriter codeWriter;
     private String className;
     private String packageName;
+    private Map bufferedStartPrefixMappings = new HashMap();
 
     public TranslaterContext(InputSource is, CodeWriter codeWriter) {
         super(is);
@@ -55,4 +60,17 @@ public class TranslaterContext extends BaseContext implements TranslaterResult {
     public CodeWriter getCodeWriter() {
         return codeWriter;
     }
+
+    public Map getBufferedStartPrefixMappings() {
+        return Collections.unmodifiableMap(bufferedStartPrefixMappings);
+    }
+
+    public void clearBufferedStartPrefixMappings() {
+        bufferedStartPrefixMappings.clear();
+    }
+
+    public void bufferStartPrefixMapping(String prefix, String uri) {
+        bufferedStartPrefixMappings.put(prefix, uri);
+    }
+
 }
